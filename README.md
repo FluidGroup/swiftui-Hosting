@@ -1,3 +1,3 @@
-# MyLibrary
+# SwiftUI Hosting components
 
-A description of this package.
+
