@@ -113,7 +113,14 @@ open class SwiftUIHostingView: UIView {
 
   /// Returns calculated size using internal hosting controller
   open override func sizeThatFits(_ size: CGSize) -> CGSize {
-    hostingController.sizeThatFits(in: size)
+    var fixedSize = size
+    if fixedSize.width == .infinity {
+      fixedSize.width = UIView.layoutFittingCompressedSize.width
+    }
+    if fixedSize.height == .infinity {
+      fixedSize.height = UIView.layoutFittingCompressedSize.height
+    }
+    return hostingController.sizeThatFits(in: fixedSize)
   }
 
   open override func didMoveToWindow() {
