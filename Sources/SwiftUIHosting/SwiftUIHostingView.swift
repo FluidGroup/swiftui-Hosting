@@ -3,6 +3,18 @@ import SwiftUI
 /// A view that hosts SwiftUI for UIKit environment.
 open class SwiftUIHostingView: UIView {
 
+  public enum SizeMeasureMode {
+
+    /// Use systemLayoutSizeFitting
+    case autoLayout
+
+    /// Use sizeThatFits
+    case systemSizeThatFits
+
+    /// Use sizeThatFits with UIView.layoutFittingCompressedSize if the value is infinite
+    case compressedSizeThatFits
+  }
+
   public struct Configuration {
 
     /**
@@ -23,12 +35,16 @@ open class SwiftUIHostingView: UIView {
      */
     public var disableSafeArea: Bool
 
+    public var sizeMeasureMode: SizeMeasureMode
+
     public init(
       registersAsChildViewController: Bool = true,
-      disableSafeArea: Bool = true
+      disableSafeArea: Bool = true,
+      sizeMeasureMode: SizeMeasureMode = .systemSizeThatFits
     ) {
       self.registersAsChildViewController = registersAsChildViewController
       self.disableSafeArea = disableSafeArea
+      self.sizeMeasureMode = sizeMeasureMode
     }
   }
 
@@ -113,14 +129,29 @@ open class SwiftUIHostingView: UIView {
 
   /// Returns calculated size using internal hosting controller
   open override func sizeThatFits(_ size: CGSize) -> CGSize {
-    var fixedSize = size
-    if fixedSize.width == .infinity {
-      fixedSize.width = UIView.layoutFittingCompressedSize.width
+
+    switch configuration.sizeMeasureMode {
+    case .systemSizeThatFits:
+
+      let fittingSize = hostingController.sizeThatFits(in: size)
+      return fittingSize
+    case .autoLayout:
+
+      let fittingSize = hostingController.view.systemLayoutSizeFitting(size)
+      return fittingSize
+    case .compressedSizeThatFits:
+
+      var fixedSize = size
+      if fixedSize.width == .infinity {
+        fixedSize.width = UIView.layoutFittingCompressedSize.width
+      }
+      if fixedSize.height == .infinity {
+        fixedSize.height = UIView.layoutFittingCompressedSize.height
+      }
+      let fittingSize = hostingController.sizeThatFits(in: fixedSize)
+      return fittingSize
     }
-    if fixedSize.height == .infinity {
-      fixedSize.height = UIView.layoutFittingCompressedSize.height
-    }
-    return hostingController.sizeThatFits(in: fixedSize)
+
   }
 
   open override func didMoveToWindow() {
