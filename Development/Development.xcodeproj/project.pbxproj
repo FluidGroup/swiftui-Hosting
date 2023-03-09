@@ -22,6 +22,7 @@
 		4B7E762F29B9A214009DE246 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4B7E763129B9A29A009DE246 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		4B7E763429B9A49D009DE246 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
+		4B7E763629B9AC1A009DE246 /* swiftui-Hosting */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "swiftui-Hosting"; path = ..; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -38,6 +39,7 @@
 		4B7E761529B9A1EF009DE246 = {
 			isa = PBXGroup;
 			children = (
+				4B7E763629B9AC1A009DE246 /* swiftui-Hosting */,
 				4B7E762029B9A1EF009DE246 /* Development */,
 				4B7E761F29B9A1EF009DE246 /* Products */,
 			);
