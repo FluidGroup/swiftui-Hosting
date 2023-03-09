@@ -48,49 +48,29 @@ open class SwiftUIHostingView: UIView {
     }
   }
 
-  private var hostingController: HostingController<RootView>
-
-  private let proxy: Proxy = .init()
+  private let hostingController: HostingController<AnyView>
 
   public let configuration: Configuration
 
-  public convenience init<Content: View>(
+  public init<Content: View>(
     _ name: String = "",
     _ file: StaticString = #file,
     _ function: StaticString = #function,
     _ line: UInt = #line,
     configuration: Configuration = .init(),
-    @ViewBuilder content: @escaping () -> Content
+    @ViewBuilder content: () -> Content
   ) {
-    self.init(
-      name,
-      file,
-      function,
-      line,
-      configuration: configuration
-    )
-    setContent(content: content)
-  }
 
-  // MARK: - Initializers
-
-  public init(
-    _ name: String = "",
-    _ file: StaticString = #file,
-    _ function: StaticString = #function,
-    _ line: UInt = #line,
-    configuration: Configuration = .init()
-  ) {
     self.configuration = configuration
 
     self.hostingController = HostingController(
       disableSafeArea: configuration.disableSafeArea,
-      rootView: RootView(proxy: proxy)
+      rootView: AnyView(content())
     )
 
     super.init(frame: .null)
 
-    #if DEBUG
+#if DEBUG
     let file = URL(string: file.description)?.deletingPathExtension().lastPathComponent ?? "unknown"
     self.accessibilityIdentifier = [
       name,
@@ -98,8 +78,8 @@ open class SwiftUIHostingView: UIView {
       function.description,
       line.description,
     ]
-    .joined(separator: ".")
-    #endif
+      .joined(separator: ".")
+#endif
 
     hostingController.view.backgroundColor = .clear
 
@@ -117,7 +97,6 @@ open class SwiftUIHostingView: UIView {
       // TODO: Reduces number of calling invalidation, it's going to be happen even it's same value.
       controller.view.invalidateIntrinsicContentSize()
     }
-
   }
 
   @available(*, unavailable)
@@ -184,31 +163,4 @@ open class SwiftUIHostingView: UIView {
     }
   }
 
-  // MARK: -
-
-  public final func setContent<Content: SwiftUI.View>(
-    @ViewBuilder content: @escaping () -> Content
-  ) {
-    proxy.content = {
-      return SwiftUI.AnyView(
-        content()
-      )
-    }
-  }
-
-}
-
-final class Proxy: ObservableObject {
-  @Published var content: () -> SwiftUI.AnyView? = { nil }
-
-  init() {
-  }
-}
-
-struct RootView: SwiftUI.View {
-  @ObservedObject var proxy: Proxy
-
-  var body: some View {
-    proxy.content()
-  }
 }
