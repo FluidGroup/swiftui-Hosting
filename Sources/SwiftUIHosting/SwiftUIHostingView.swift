@@ -134,22 +134,31 @@ open class SwiftUIHostingView: UIView {
     case .systemSizeThatFits:
 
       let fittingSize = hostingController.sizeThatFits(in: size)
+
       return fittingSize
+
     case .autoLayout:
 
       let fittingSize = hostingController.view.systemLayoutSizeFitting(size)
+
       return fittingSize
+
     case .compressedSizeThatFits:
 
       var fixedSize = size
+
       if fixedSize.width == .infinity {
         fixedSize.width = UIView.layoutFittingCompressedSize.width
       }
+
       if fixedSize.height == .infinity {
         fixedSize.height = UIView.layoutFittingCompressedSize.height
       }
+
       let fittingSize = hostingController.sizeThatFits(in: fixedSize)
+
       return fittingSize
+
     }
 
   }
