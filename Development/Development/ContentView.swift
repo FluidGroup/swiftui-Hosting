@@ -12,7 +12,7 @@ struct ContentView: View {
     NavigationView {
       List {        
         NavigationLink("Content") {
-          BookFoo()
+          BookSizing()
         }
       }
     }
@@ -25,19 +25,3 @@ struct ContentView_Previews: PreviewProvider {
   }
 }
 
-struct BookFoo: View, PreviewProvider {
-  var body: some View {
-    Content()
-  }
-
-  static var previews: some View {
-    Self()
-  }
-
-  private struct Content: View {
-
-    var body: some View {
-      Text("Book")
-    }
-  }
-}

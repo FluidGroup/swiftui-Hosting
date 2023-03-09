@@ -12,6 +12,9 @@
 		4B7E762929B9A1F0009DE246 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4B7E762829B9A1F0009DE246 /* Preview Assets.xcassets */; };
 		4B7E763029B9A214009DE246 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7E762F29B9A214009DE246 /* AppDelegate.swift */; };
 		4B7E763529B9A49D009DE246 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4B7E763429B9A49D009DE246 /* Launch Screen.storyboard */; };
+		4B7E763829B9B105009DE246 /* BookSizing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7E763729B9B105009DE246 /* BookSizing.swift */; };
+		4B7E763B29B9B143009DE246 /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7E763A29B9B143009DE246 /* Util.swift */; };
+		4B7E763E29B9B2F0009DE246 /* SwiftUIHosting in Frameworks */ = {isa = PBXBuildFile; productRef = 4B7E763D29B9B2F0009DE246 /* SwiftUIHosting */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -23,6 +26,8 @@
 		4B7E763129B9A29A009DE246 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		4B7E763429B9A49D009DE246 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		4B7E763629B9AC1A009DE246 /* swiftui-Hosting */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "swiftui-Hosting"; path = ..; sourceTree = "<group>"; };
+		4B7E763729B9B105009DE246 /* BookSizing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookSizing.swift; sourceTree = "<group>"; };
+		4B7E763A29B9B143009DE246 /* Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -30,6 +35,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4B7E763E29B9B2F0009DE246 /* SwiftUIHosting in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -42,6 +48,7 @@
 				4B7E763629B9AC1A009DE246 /* swiftui-Hosting */,
 				4B7E762029B9A1EF009DE246 /* Development */,
 				4B7E761F29B9A1EF009DE246 /* Products */,
+				4B7E763C29B9B2F0009DE246 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -56,12 +63,14 @@
 		4B7E762029B9A1EF009DE246 /* Development */ = {
 			isa = PBXGroup;
 			children = (
+				4B7E763929B9B10D009DE246 /* Book */,
 				4B7E763429B9A49D009DE246 /* Launch Screen.storyboard */,
 				4B7E763129B9A29A009DE246 /* Info.plist */,
 				4B7E762F29B9A214009DE246 /* AppDelegate.swift */,
 				4B7E762329B9A1EF009DE246 /* ContentView.swift */,
 				4B7E762529B9A1F0009DE246 /* Assets.xcassets */,
 				4B7E762729B9A1F0009DE246 /* Preview Content */,
+				4B7E763A29B9B143009DE246 /* Util.swift */,
 			);
 			path = Development;
 			sourceTree = "<group>";
@@ -72,6 +81,21 @@
 				4B7E762829B9A1F0009DE246 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		4B7E763929B9B10D009DE246 /* Book */ = {
+			isa = PBXGroup;
+			children = (
+				4B7E763729B9B105009DE246 /* BookSizing.swift */,
+			);
+			path = Book;
+			sourceTree = "<group>";
+		};
+		4B7E763C29B9B2F0009DE246 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -90,6 +114,9 @@
 			dependencies = (
 			);
 			name = Development;
+			packageProductDependencies = (
+				4B7E763D29B9B2F0009DE246 /* SwiftUIHosting */,
+			);
 			productName = Development;
 			productReference = 4B7E761E29B9A1EF009DE246 /* Development.app */;
 			productType = "com.apple.product-type.application";
@@ -147,6 +174,8 @@
 			files = (
 				4B7E763029B9A214009DE246 /* AppDelegate.swift in Sources */,
 				4B7E762429B9A1EF009DE246 /* ContentView.swift in Sources */,
+				4B7E763829B9B105009DE246 /* BookSizing.swift in Sources */,
+				4B7E763B29B9B143009DE246 /* Util.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -349,6 +378,13 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		4B7E763D29B9B2F0009DE246 /* SwiftUIHosting */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SwiftUIHosting;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 4B7E761629B9A1EF009DE246 /* Project object */;
 }
