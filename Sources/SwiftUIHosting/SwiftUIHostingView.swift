@@ -146,21 +146,58 @@ open class SwiftUIHostingView: UIView {
 
     super.didMoveToWindow()
 
-    if configuration.registersAsChildViewController {
-      // https://muukii.notion.site/Why-we-need-to-add-UIHostingController-to-view-controller-chain-14de20041c99499d803f5a877c9a1dd1
+    registerParent()
 
-      if let _ = window {
-        if let parentViewController = self.findNearestViewController() {
-          parentViewController.addChild(hostingController)
-          hostingController.didMove(toParent: parentViewController)
-        } else {
-          assertionFailure()
-        }
-      } else {
-        hostingController.willMove(toParent: nil)
-        hostingController.removeFromParent()
-      }
+  }
+
+  open override func didMoveToSuperview() {
+    super.didMoveToSuperview()
+
+    registerParent()
+  }
+
+  private func registerParent() {
+    // https://muukii.notion.site/Why-we-need-to-add-UIHostingController-to-view-controller-chain-14de20041c99499d803f5a877c9a1dd1
+
+    guard configuration.registersAsChildViewController else {
+      return
     }
+
+    guard let _ = window else {
+      return
+    }
+
+    // find a view controller nearest using responder chain.
+    if let parentViewController = self.findNearestViewController() {
+
+      if parentViewController == hostingController.parent {
+        // it's already associated with proposed view controller as parent.
+      } else {
+
+        if let _ = hostingController.parent {
+          // if associated with different parent view controller, unregister first.
+          hostingController.willMove(toParent: nil)
+          hostingController.removeFromParent()
+        }
+
+        // register parent view controller
+        parentViewController.addChild(hostingController)
+        hostingController.didMove(toParent: parentViewController)
+      }
+
+    } else {
+      assertionFailure()
+    }
+  }
+
+  /**
+   Remove underlying hosting view controller from the parent view controller.
+   You may remove parent view controller manually.
+   However, it will have a new parent view controller when this view got new window or new view.
+   */
+  public func unregisterParent() {
+    hostingController.willMove(toParent: nil)
+    hostingController.removeFromParent()
   }
 
 }
