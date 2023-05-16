@@ -21,11 +21,9 @@ open class SwiftUIHostingViewController: UIViewController {
 
   open override func viewDidLoad() {
 
-    let contentView = SwiftUIHostingView(configuration: configuration) { [weak self] in
-      if let self {
-        content(self)
-      }
-    }
+    let _content = content(self)
+
+    let contentView = SwiftUIHostingView(configuration: configuration) { _content }
 
     view.addSubview(contentView)
     contentView.translatesAutoresizingMaskIntoConstraints = false
