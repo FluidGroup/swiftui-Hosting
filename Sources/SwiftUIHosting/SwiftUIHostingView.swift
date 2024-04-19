@@ -9,7 +9,7 @@ open class SwiftUIHostingView: UIView {
     case autoLayout
 
     /// Use sizeThatFits
-    case systemSizeThatFits
+    case sizeThatFits
 
     /// Use sizeThatFits with UIView.layoutFittingCompressedSize if the value is infinite
     case compressedSizeThatFits
@@ -40,7 +40,7 @@ open class SwiftUIHostingView: UIView {
     public init(
       registersAsChildViewController: Bool = true,
       disableSafeArea: Bool = true,
-      sizeMeasureMode: SizeMeasureMode = .systemSizeThatFits
+      sizeMeasureMode: SizeMeasureMode = .sizeThatFits
     ) {
       self.registersAsChildViewController = registersAsChildViewController
       self.disableSafeArea = disableSafeArea
@@ -110,7 +110,7 @@ open class SwiftUIHostingView: UIView {
   open override func sizeThatFits(_ size: CGSize) -> CGSize {
 
     switch configuration.sizeMeasureMode {
-    case .systemSizeThatFits:
+    case .sizeThatFits:
 
       let fittingSize = hostingController.sizeThatFits(in: size)
 
