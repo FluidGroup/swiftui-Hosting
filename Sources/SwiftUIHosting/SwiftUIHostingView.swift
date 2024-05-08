@@ -48,7 +48,7 @@ open class SwiftUIHostingView: UIView {
     }
   }
 
-  private let hostingController: HostingController<AnyView>
+  private let hostingController: UIHostingController<AnyView>
 
   public let configuration: Configuration
 
@@ -93,10 +93,10 @@ open class SwiftUIHostingView: UIView {
       hostingController.view.leftAnchor.constraint(equalTo: leftAnchor),
     ])
 
-    hostingController.onViewDidLayoutSubviews = { controller in
-      // TODO: Reduces number of calling invalidation, it's going to be happen even it's same value.
-      controller.view.invalidateIntrinsicContentSize()
-    }
+//    hostingController.onViewDidLayoutSubviews = { controller in
+//      // TODO: Reduces number of calling invalidation, it's going to be happen even it's same value.
+//      controller.view.invalidateIntrinsicContentSize()
+//    }
   }
 
   @available(*, unavailable)

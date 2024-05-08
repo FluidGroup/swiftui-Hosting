@@ -9,13 +9,19 @@ import SwiftUI
 
 struct ContentView: View {
   var body: some View {
-    NavigationView {
-      List {        
-        NavigationLink("Content") {
-          BookSizing()
-        }
-      }
-    }
+//    NavigationView {
+//      List {        
+//        NavigationLink("Content") {
+//          BookSizing()
+//        }
+//        if #available(iOS 14.0, *) {
+//          NavigationLink("Hosting") {
+//            BookHosting()
+//          }
+//        }
+//      }
+//    }    
+    BookHosting()
   }
 }
 
