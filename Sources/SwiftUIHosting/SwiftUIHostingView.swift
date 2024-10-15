@@ -63,10 +63,24 @@ open class SwiftUIHostingView: UIView {
 
     self.configuration = configuration
 
+    #if DEBUG
+
+    self.hostingController = HostingController(
+      accessibilityIdentifier: _typeName(Content.self),
+      disableSafeArea: configuration.disableSafeArea,
+      rootView: AnyView(content())
+    )
+
+    #else
+
     self.hostingController = HostingController(
       disableSafeArea: configuration.disableSafeArea,
       rootView: AnyView(content())
     )
+
+    #endif
+
+
 
     super.init(frame: .null)
 
