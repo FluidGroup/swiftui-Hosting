@@ -15,6 +15,7 @@ open class SwiftUIHostingView: UIView {
     case compressedSizeThatFits
   }
 
+  @MainActor
   public struct Configuration {
 
     /**
@@ -36,15 +37,19 @@ open class SwiftUIHostingView: UIView {
     public var disableSafeArea: Bool
 
     public var sizeMeasureMode: SizeMeasureMode
+    
+    public var baseModifier: BaseModifier
 
     public init(
       registersAsChildViewController: Bool = true,
       disableSafeArea: Bool = true,
-      sizeMeasureMode: SizeMeasureMode = .systemSizeThatFits
+      sizeMeasureMode: SizeMeasureMode = .systemSizeThatFits,
+      baseModifier: BaseModifier = .shared
     ) {
       self.registersAsChildViewController = registersAsChildViewController
       self.disableSafeArea = disableSafeArea
       self.sizeMeasureMode = sizeMeasureMode
+      self.baseModifier = baseModifier
     }
   }
 
@@ -62,25 +67,25 @@ open class SwiftUIHostingView: UIView {
   ) {
 
     self.configuration = configuration
+    
+    let usingContent = content().modifier(configuration.baseModifier)
 
     #if DEBUG
 
     self.hostingController = HostingController(
       accessibilityIdentifier: _typeName(Content.self),
       disableSafeArea: configuration.disableSafeArea,
-      rootView: AnyView(content())
+      rootView: AnyView(usingContent)
     )
 
     #else
 
     self.hostingController = HostingController(
       disableSafeArea: configuration.disableSafeArea,
-      rootView: AnyView(content())
+      rootView: AnyView(usingContent)
     )
 
     #endif
-
-
 
     super.init(frame: .null)
 

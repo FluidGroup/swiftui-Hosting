@@ -2,6 +2,7 @@ import SwiftUI
 import UIKit
 import SwiftUIHosting
 
+@MainActor
 func measureSize(content: some View, targetSize: CGSize) {
 
   do {
