@@ -2,12 +2,16 @@ import SwiftUI
 
 public struct BaseModifier: ViewModifier {
   
-  @MainActor
-  public static var shared: Self = .init(locale: nil)
+  public nonisolated static var shared: Self {
+    get { _shared.value }
+    set { _shared.value = newValue }
+  }
+  
+  private nonisolated static let _shared: Atomic<Self> = .init(.init(locale: nil))
   
   public let locale: Locale?
-  
-  public init(locale: Locale?) {
+    
+  public nonisolated init(locale: Locale?) {
     self.locale = locale
   }
   
@@ -20,6 +24,30 @@ public struct BaseModifier: ViewModifier {
           $0
         }
       }
+  }
+  
+}
+
+private final class Atomic<Value>: @unchecked Sendable {
+  
+  var value: Value {
+    get {
+      lock.lock()
+      defer { lock.unlock() }
+      return _value
+    }
+    set {
+      lock.lock()
+      defer { lock.unlock() }
+      _value = newValue
+    }
+  }
+  
+  private var _value: Value
+  private let lock = NSLock()
+  
+  init(_ value: consuming Value) {
+    self._value = value
   }
   
 }

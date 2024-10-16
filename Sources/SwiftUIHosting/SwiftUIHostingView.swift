@@ -15,7 +15,6 @@ open class SwiftUIHostingView: UIView {
     case compressedSizeThatFits
   }
 
-  @MainActor
   public struct Configuration {
 
     /**
