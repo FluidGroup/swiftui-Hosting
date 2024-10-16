@@ -29,5 +29,5 @@ let package = Package(
       dependencies: ["SwiftUIHosting"]
     ),
   ],
-  swiftLanguageModes: [.v6]
+  swiftLanguageModes: [.v5, .v6]
 )
