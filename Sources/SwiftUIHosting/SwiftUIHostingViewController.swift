@@ -5,12 +5,28 @@ open class SwiftUIHostingViewController: UIViewController {
   public let configuration: SwiftUIHostingView.Configuration
   private let content: (UIViewController) -> AnyView
 
+  private let name: String
+  private let file: StaticString
+  private let function: StaticString
+  private let line: UInt
+
   public init<Content: View>(
+    _ name: String = "",
+    _ file: StaticString = #file,
+    _ function: StaticString = #function,
+    _ line: UInt = #line,
     configuration: SwiftUIHostingView.Configuration = .init(),
     content: @escaping (Self) -> Content
   ) {
+
     self.configuration = configuration
     self.content = { AnyView(content(unsafeDowncast($0, to: Self.self))) }
+
+    self.name = name
+    self.file = file
+    self.function = function
+    self.line = line
+
     super.init(nibName: nil, bundle: nil)
   }
 
@@ -23,7 +39,13 @@ open class SwiftUIHostingViewController: UIViewController {
 
     let _content = content(self)
 
-    let contentView = SwiftUIHostingView(configuration: configuration) { _content }
+    let contentView = SwiftUIHostingView(
+      name,
+      file,
+      function,
+      line,
+      configuration: configuration
+    ) { _content }
 
     view.addSubview(contentView)
     contentView.translatesAutoresizingMaskIntoConstraints = false
