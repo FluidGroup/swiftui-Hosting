@@ -199,7 +199,7 @@ open class AnySwiftUIHostingView: SwiftUIHostingView<AnyView> {
 
 }
 
-public enum SizeMeasureMode {
+public enum SwiftUIHostingSizeMeasureMode {
   
   /// Use systemLayoutSizeFitting
   case autoLayout
@@ -231,14 +231,14 @@ public struct SwiftUIHostingConfiguration {
    */
   public var disableSafeArea: Bool
   
-  public var sizeMeasureMode: SizeMeasureMode
+  public var sizeMeasureMode: SwiftUIHostingSizeMeasureMode
   
   public var baseModifier: BaseModifier
   
   public init(
     registersAsChildViewController: Bool = true,
     disableSafeArea: Bool = true,
-    sizeMeasureMode: SizeMeasureMode = .systemSizeThatFits,
+    sizeMeasureMode: SwiftUIHostingSizeMeasureMode = .systemSizeThatFits,
     baseModifier: BaseModifier = .shared
   ) {
     self.registersAsChildViewController = registersAsChildViewController
