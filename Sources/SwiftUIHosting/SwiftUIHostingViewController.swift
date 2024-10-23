@@ -1,26 +1,27 @@
 import SwiftUI
 
-open class SwiftUIHostingViewController: UIViewController {
+open class SwiftUIHostingViewController<Content: View>: UIViewController {
 
-  public let configuration: SwiftUIHostingView.Configuration
-  private let content: (UIViewController) -> AnyView
+  public let configuration: SwiftUIHostingConfiguration
+
+  private let content: (UIViewController) -> Content
 
   private let name: String
   private let file: StaticString
   private let function: StaticString
   private let line: UInt
 
-  public init<Content: View>(
+  public init(
     _ name: String = "",
     _ file: StaticString = #file,
     _ function: StaticString = #function,
     _ line: UInt = #line,
-    configuration: SwiftUIHostingView.Configuration = .init(),
+    configuration: SwiftUIHostingConfiguration = .init(),
     content: @escaping (Self) -> Content
   ) {
 
     self.configuration = configuration
-    self.content = { AnyView(content(unsafeDowncast($0, to: Self.self))) }
+    self.content = { content(unsafeDowncast($0, to: Self.self)) }
 
     self.name = name
     self.file = file
@@ -36,6 +37,8 @@ open class SwiftUIHostingViewController: UIViewController {
   }
 
   open override func viewDidLoad() {
+
+    super.viewDidLoad()
 
     let _content = content(self)
 
@@ -57,6 +60,33 @@ open class SwiftUIHostingViewController: UIViewController {
       contentView.leftAnchor.constraint(equalTo: view.leftAnchor),
     ])
 
+  }
+
+}
+
+open class AnySwiftUIHostingViewController: SwiftUIHostingViewController<AnyView> {
+
+  public init<AnyViewContent: View>(
+    _ name: String = "",
+    _ file: StaticString = #file,
+    _ function: StaticString = #function,
+    _ line: UInt = #line,
+    configuration: SwiftUIHostingConfiguration = .init(),
+    content: @escaping (UIViewController) -> AnyViewContent
+  ) {
+    super.init(
+      name,
+      file,
+      function,
+      line,
+      configuration: configuration,
+      content: { AnyView(content($0)) }
+    )
+  }
+
+  @available(*, unavailable)
+  public required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
   }
 
 }

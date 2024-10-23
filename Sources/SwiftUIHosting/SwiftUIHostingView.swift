@@ -1,103 +1,55 @@
 import SwiftUI
 
 /// A view that hosts SwiftUI for UIKit environment.
-open class SwiftUIHostingView: UIView {
+open class SwiftUIHostingView<Content: View>: UIView {
 
-  public enum SizeMeasureMode {
+  private let hostingController: HostingController<ModifiedContent<Content, BaseModifier>>
 
-    /// Use systemLayoutSizeFitting
-    case autoLayout
+  public let configuration: SwiftUIHostingConfiguration
 
-    /// Use sizeThatFits
-    case systemSizeThatFits
-
-    /// Use sizeThatFits with UIView.layoutFittingCompressedSize if the value is infinite
-    case compressedSizeThatFits
-  }
-
-  public struct Configuration {
-
-    /**
-     Registers internal hosting controller into the nearest view controller's children.
-
-     Apple developer explains why we need to UIHostinController should be a child of the view controller.
-     ```
-     When using UIHostingController, make sure to always add the view controller together with the view to your app.
-
-     Many SwiftUI features, such as toolbars, keyboard shortcuts, and views that use UIViewControllerRepresentable, require a connection to the view controller hierarchy in UIKit to integrate properly, so never separate a hosting controller's view from the hosting controller itself.
-     ```
-     */
-    public var registersAsChildViewController: Bool
-
-    /**
-     Fixes handling safe area issue
-     https://www.notion.so/muukii/UIHostingController-safeArea-issue-ec66a560970c4a1cb44f21cc448bc513?pvs=4
-     */
-    public var disableSafeArea: Bool
-
-    public var sizeMeasureMode: SizeMeasureMode
-    
-    public var baseModifier: BaseModifier
-
-    public init(
-      registersAsChildViewController: Bool = true,
-      disableSafeArea: Bool = true,
-      sizeMeasureMode: SizeMeasureMode = .systemSizeThatFits,
-      baseModifier: BaseModifier = .shared
-    ) {
-      self.registersAsChildViewController = registersAsChildViewController
-      self.disableSafeArea = disableSafeArea
-      self.sizeMeasureMode = sizeMeasureMode
-      self.baseModifier = baseModifier
-    }
-  }
-
-  private let hostingController: HostingController<AnyView>
-
-  public let configuration: Configuration
-
-  public init<Content: View>(
+  public init(
     _ name: String = "",
     _ file: StaticString = #file,
     _ function: StaticString = #function,
     _ line: UInt = #line,
-    configuration: Configuration = .init(),
+    configuration: SwiftUIHostingConfiguration = .init(),
     @ViewBuilder content: () -> Content
   ) {
 
     self.configuration = configuration
-    
+
     let usingContent = content().modifier(configuration.baseModifier)
 
     #if DEBUG
 
-    self.hostingController = HostingController(
-      accessibilityIdentifier: _typeName(Content.self),
-      disableSafeArea: configuration.disableSafeArea,
-      rootView: AnyView(usingContent)
-    )
+      self.hostingController = HostingController(
+        accessibilityIdentifier: _typeName(Content.self),
+        disableSafeArea: configuration.disableSafeArea,
+        rootView: usingContent
+      )
 
     #else
 
-    self.hostingController = HostingController(
-      disableSafeArea: configuration.disableSafeArea,
-      rootView: AnyView(usingContent)
-    )
+      self.hostingController = HostingController(
+        disableSafeArea: configuration.disableSafeArea,
+        rootView: AnyView(usingContent)
+      )
 
     #endif
 
     super.init(frame: .null)
 
-#if DEBUG
-    let file = URL(string: file.description)?.deletingPathExtension().lastPathComponent ?? "unknown"
-    self.accessibilityIdentifier = [
-      name,
-      file,
-      function.description,
-      line.description,
-    ]
+    #if DEBUG
+      let file =
+        URL(string: file.description)?.deletingPathExtension().lastPathComponent ?? "unknown"
+      self.accessibilityIdentifier = [
+        name,
+        file,
+        function.description,
+        line.description,
+      ]
       .joined(separator: ".")
-#endif
+    #endif
 
     hostingController.view.backgroundColor = .clear
 
@@ -181,7 +133,7 @@ open class SwiftUIHostingView: UIView {
       return
     }
 
-    guard let _ = window else {
+    guard window != nil else {
       return
     }
 
@@ -192,7 +144,7 @@ open class SwiftUIHostingView: UIView {
         // it's already associated with proposed view controller as parent.
       } else {
 
-        if let _ = hostingController.parent {
+        if hostingController.parent != nil {
           // if associated with different parent view controller, unregister first.
           hostingController.willMove(toParent: nil)
           hostingController.removeFromParent()
@@ -218,4 +170,80 @@ open class SwiftUIHostingView: UIView {
     hostingController.removeFromParent()
   }
 
+}
+
+open class AnySwiftUIHostingView: SwiftUIHostingView<AnyView> {
+
+  public init<AnyViewContent: View>(
+    _ name: String = "",
+    _ file: StaticString = #file,
+    _ function: StaticString = #function,
+    _ line: UInt = #line,
+    configuration: SwiftUIHostingConfiguration = .init(),
+    @ViewBuilder content: () -> AnyViewContent
+  ) {
+    super.init(
+      name,
+      file,
+      function,
+      line,
+      configuration: configuration,
+      content: { AnyView(content()) }
+    )
+  }
+
+  @available(*, unavailable)
+  public required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+
+}
+
+public enum SizeMeasureMode {
+  
+  /// Use systemLayoutSizeFitting
+  case autoLayout
+  
+  /// Use sizeThatFits
+  case systemSizeThatFits
+  
+  /// Use sizeThatFits with UIView.layoutFittingCompressedSize if the value is infinite
+  case compressedSizeThatFits
+}
+
+public struct SwiftUIHostingConfiguration {
+  
+  /**
+   Registers internal hosting controller into the nearest view controller's children.
+   
+   Apple developer explains why we need to UIHostinController should be a child of the view controller.
+   ```
+   When using UIHostingController, make sure to always add the view controller together with the view to your app.
+   
+   Many SwiftUI features, such as toolbars, keyboard shortcuts, and views that use UIViewControllerRepresentable, require a connection to the view controller hierarchy in UIKit to integrate properly, so never separate a hosting controller's view from the hosting controller itself.
+   ```
+   */
+  public var registersAsChildViewController: Bool
+  
+  /**
+   Fixes handling safe area issue
+   https://www.notion.so/muukii/UIHostingController-safeArea-issue-ec66a560970c4a1cb44f21cc448bc513?pvs=4
+   */
+  public var disableSafeArea: Bool
+  
+  public var sizeMeasureMode: SizeMeasureMode
+  
+  public var baseModifier: BaseModifier
+  
+  public init(
+    registersAsChildViewController: Bool = true,
+    disableSafeArea: Bool = true,
+    sizeMeasureMode: SizeMeasureMode = .systemSizeThatFits,
+    baseModifier: BaseModifier = .shared
+  ) {
+    self.registersAsChildViewController = registersAsChildViewController
+    self.disableSafeArea = disableSafeArea
+    self.sizeMeasureMode = sizeMeasureMode
+    self.baseModifier = baseModifier
+  }
 }
