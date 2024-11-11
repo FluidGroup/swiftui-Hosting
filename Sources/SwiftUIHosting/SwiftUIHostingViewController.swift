@@ -17,7 +17,7 @@ open class SwiftUIHostingViewController<Content: View>: UIViewController {
     _ function: StaticString = #function,
     _ line: UInt = #line,
     configuration: SwiftUIHostingConfiguration = .init(),
-    content: @escaping (Self) -> Content
+    @ViewBuilder content: @escaping (Self) -> Content
   ) {
 
     self.configuration = configuration
@@ -72,7 +72,7 @@ open class AnySwiftUIHostingViewController: SwiftUIHostingViewController<AnyView
     _ function: StaticString = #function,
     _ line: UInt = #line,
     configuration: SwiftUIHostingConfiguration = .init(),
-    content: @escaping (UIViewController) -> AnyViewContent
+    @ViewBuilder content: @escaping (UIViewController) -> AnyViewContent
   ) {
     super.init(
       name,
