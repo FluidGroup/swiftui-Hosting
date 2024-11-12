@@ -13,7 +13,7 @@ open class SwiftUIHostingView<Content: View>: UIView {
     _ function: StaticString = #function,
     _ line: UInt = #line,
     configuration: SwiftUIHostingConfiguration = .init(),
-    @ViewBuilder content: () -> Content
+    @ViewBuilder content: @MainActor () -> Content
   ) {
 
     self.configuration = configuration
@@ -180,7 +180,7 @@ open class AnySwiftUIHostingView: SwiftUIHostingView<AnyView> {
     _ function: StaticString = #function,
     _ line: UInt = #line,
     configuration: SwiftUIHostingConfiguration = .init(),
-    @ViewBuilder content: () -> AnyViewContent
+    @ViewBuilder content: @MainActor () -> AnyViewContent
   ) {
     super.init(
       name,
