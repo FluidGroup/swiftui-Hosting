@@ -17,11 +17,11 @@ open class SwiftUIHostingViewController<Content: View>: UIViewController {
     _ function: StaticString = #function,
     _ line: UInt = #line,
     configuration: SwiftUIHostingConfiguration = .init(),
-    @ViewBuilder content: @escaping (Self) -> Content
+    @ViewBuilder content: @escaping @MainActor (UIViewController) -> Content
   ) {
 
     self.configuration = configuration
-    self.content = { content(unsafeDowncast($0, to: Self.self)) }
+    self.content = content
 
     self.name = name
     self.file = file
@@ -72,7 +72,7 @@ open class AnySwiftUIHostingViewController: SwiftUIHostingViewController<AnyView
     _ function: StaticString = #function,
     _ line: UInt = #line,
     configuration: SwiftUIHostingConfiguration = .init(),
-    @ViewBuilder content: @escaping (UIViewController) -> AnyViewContent
+    @ViewBuilder content: @escaping @MainActor (UIViewController) -> AnyViewContent
   ) {
     super.init(
       name,
