@@ -32,7 +32,7 @@ open class SwiftUIHostingView<Content: View>: UIView {
 
       self.hostingController = HostingController(
         disableSafeArea: configuration.disableSafeArea,
-        rootView: AnyView(usingContent)
+        rootView: usingContent
       )
 
     #endif
