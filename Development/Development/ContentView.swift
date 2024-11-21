@@ -15,8 +15,13 @@ struct ContentView: View {
         NavigationLink("Content") {
           BookSizing()          
         }
-        NavigationLink("Keyboard Avoidance") {
-          KeyboardAvoidanceViewControllerRepresentable()
+        NavigationLink("Keyboard Avoidance ignores") {
+          KeyboardAvoidanceViewControllerRepresentable(ignoresKeyboard: true)
+            .edgesIgnoringSafeArea(.all)
+        }
+        
+        NavigationLink("Keyboard Avoidance not ignores") {
+          KeyboardAvoidanceViewControllerRepresentable(ignoresKeyboard: false)
             .edgesIgnoringSafeArea(.all)
         }
       }
@@ -32,8 +37,14 @@ struct ContentView_Previews: PreviewProvider {
 
 struct KeyboardAvoidanceViewControllerRepresentable: UIViewControllerRepresentable {
   
+  let ignoresKeyboard: Bool
+  
+  init(ignoresKeyboard: Bool) {
+    self.ignoresKeyboard = ignoresKeyboard
+  }
+      
   func makeUIViewController(context: Context) -> some UIViewController {
-    KeyboardAvoidanceViewController()
+    KeyboardAvoidanceViewController(ignoresKeyboard: ignoresKeyboard)
   }
   
   func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {
@@ -44,10 +55,21 @@ struct KeyboardAvoidanceViewControllerRepresentable: UIViewControllerRepresentab
 
 final class KeyboardAvoidanceViewController: UIViewController, UITextFieldDelegate {
   
+  let ignoresKeyboard: Bool
+  
+  init(ignoresKeyboard: Bool) {
+    self.ignoresKeyboard = ignoresKeyboard
+    super.init(nibName: nil, bundle: nil)
+  }
+  
+  required init?(coder: NSCoder) {
+    fatalError()
+  }
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    let hostingView = SwiftUIHostingView(configuration: .init(ignoresKeyboard: false)) { 
+    let hostingView = SwiftUIHostingView(configuration: .init(ignoresKeyboard: ignoresKeyboard)) { 
       Text("Hello")
     }
     
@@ -56,7 +78,8 @@ final class KeyboardAvoidanceViewController: UIViewController, UITextFieldDelega
     
     NSLayoutConstraint.activate([
       hostingView.rightAnchor.constraint(equalTo: view.rightAnchor),
-      hostingView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+      hostingView.bottomAnchor
+        .constraint(equalTo: view.bottomAnchor, constant: -200),
       hostingView.leftAnchor.constraint(equalTo: view.leftAnchor),
     ])
     
