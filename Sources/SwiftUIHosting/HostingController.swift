@@ -34,7 +34,13 @@ final class HostingController<Content: View>: UIHostingController<Content> {
         guard let viewSubclass = objc_allocateClassPair(viewClass, viewClassNameUtf8, 0) else { return }
         
         if let method = class_getInstanceMethod(viewClass, NSSelectorFromString("keyboardWillShowWithNotification:")) {
-          let keyboardWillShow: @convention(block) (AnyObject, AnyObject) -> Void = { _, _ in }
+          let keyboardWillShow: @convention(block) (AnyObject, AnyObject) -> Void = { _, _ in
+            if ignoresKeyboard {
+              
+            } else {
+              
+            }
+          }
           class_addMethod(viewSubclass, NSSelectorFromString("keyboardWillShowWithNotification:"),
                           imp_implementationWithBlock(keyboardWillShow), method_getTypeEncoding(method))
         }
