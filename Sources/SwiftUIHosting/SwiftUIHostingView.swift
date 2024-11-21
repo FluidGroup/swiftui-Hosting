@@ -25,6 +25,7 @@ open class SwiftUIHostingView<Content: View>: UIView {
       self.hostingController = HostingController(
         accessibilityIdentifier: _typeName(Content.self),
         disableSafeArea: configuration.disableSafeArea,
+        ignoresKeyboard: configuration.ignoresKeyboard,
         rootView: usingContent
       )
 
@@ -32,6 +33,7 @@ open class SwiftUIHostingView<Content: View>: UIView {
 
       self.hostingController = HostingController(
         disableSafeArea: configuration.disableSafeArea,
+        ignoresKeyboard: configuration.ignoresKeyboard,
         rootView: usingContent
       )
 
@@ -231,6 +233,8 @@ public struct SwiftUIHostingConfiguration {
    */
   public var disableSafeArea: Bool
   
+  public var ignoresKeyboard: Bool
+  
   public var sizeMeasureMode: SwiftUIHostingSizeMeasureMode
   
   public var baseModifier: BaseModifier
@@ -238,11 +242,13 @@ public struct SwiftUIHostingConfiguration {
   public init(
     registersAsChildViewController: Bool = true,
     disableSafeArea: Bool = true,
+    ignoresKeyboard: Bool = false,
     sizeMeasureMode: SwiftUIHostingSizeMeasureMode = .systemSizeThatFits,
     baseModifier: BaseModifier = .shared
   ) {
     self.registersAsChildViewController = registersAsChildViewController
     self.disableSafeArea = disableSafeArea
+    self.ignoresKeyboard = ignoresKeyboard
     self.sizeMeasureMode = sizeMeasureMode
     self.baseModifier = baseModifier
   }
