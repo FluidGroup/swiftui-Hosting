@@ -1,9 +1,23 @@
 import SwiftUI
 
+private struct Wrapper<Content: View>: View {  
+  
+  let content: () -> Content
+  
+  init(@ViewBuilder content: @escaping () -> Content) {
+    self.content = content
+  }
+  
+  var body: some View {
+    content()
+  }
+  
+}
+
 /// A view that hosts SwiftUI for UIKit environment.
 open class SwiftUIHostingView<Content: View>: UIView {
 
-  private let hostingController: HostingController<ModifiedContent<Content, BaseModifier>>
+  private let hostingController: HostingController<Wrapper<ModifiedContent<Content, BaseModifier>>>
 
   public let configuration: SwiftUIHostingConfiguration
 
@@ -13,13 +27,16 @@ open class SwiftUIHostingView<Content: View>: UIView {
     _ function: StaticString = #function,
     _ line: UInt = #line,
     configuration: SwiftUIHostingConfiguration = .init(),
-    @ViewBuilder content: @MainActor () -> Content
+    @ViewBuilder content: @escaping @MainActor () -> Content
   ) {
 
     self.configuration = configuration
 
-    let usingContent = content().modifier(configuration.baseModifier)
-
+    let usingContent = Wrapper {
+      // Let SwiftUI Observation works
+      content().modifier(configuration.baseModifier)
+    }    
+    
     #if DEBUG
 
       self.hostingController = HostingController(
@@ -182,7 +199,7 @@ open class AnySwiftUIHostingView: SwiftUIHostingView<AnyView> {
     _ function: StaticString = #function,
     _ line: UInt = #line,
     configuration: SwiftUIHostingConfiguration = .init(),
-    @ViewBuilder content: @MainActor () -> AnyViewContent
+    @ViewBuilder content: @escaping @MainActor () -> AnyViewContent
   ) {
     super.init(
       name,
