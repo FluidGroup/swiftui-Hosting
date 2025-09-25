@@ -40,19 +40,15 @@ open class SwiftUIHostingViewController<Content: View>: UIViewController {
 
     super.viewDidLoad()
 
+    let _content = content(self)
+
     let contentView = SwiftUIHostingView(
       name,
       file,
       function,
       line,
       configuration: configuration
-    ) { [weak self] in
-      if let self {
-        content(self)
-      } else {
-        EmptyView()
-      }
-    }
+    ) { _content }
 
     view.addSubview(contentView)
     contentView.translatesAutoresizingMaskIntoConstraints = false
