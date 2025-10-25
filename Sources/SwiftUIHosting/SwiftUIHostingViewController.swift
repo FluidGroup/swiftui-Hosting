@@ -40,24 +40,39 @@ open class SwiftUIHostingViewController<Content: View>: UIViewController {
 
     super.viewDidLoad()
 
-    let _content = content(self)
+    let _content = content(self).modifier(configuration.baseModifier)
 
-    let contentView = SwiftUIHostingView(
-      name,
-      file,
-      function,
-      line,
-      configuration: configuration
-    ) { _content }
+    #if DEBUG
 
-    view.addSubview(contentView)
-    contentView.translatesAutoresizingMaskIntoConstraints = false
+      let hostingController = HostingController(
+        accessibilityIdentifier: _typeName(Content.self),
+        disableSafeArea: configuration.disableSafeArea,
+        ignoresKeyboard: configuration.ignoresKeyboard,
+        rootView: _content
+      )
+
+    #else
+
+      let hostingController = HostingController(
+        disableSafeArea: configuration.disableSafeArea,
+        ignoresKeyboard: configuration.ignoresKeyboard,
+        rootView: _content
+      )
+
+    #endif
+
+    addChild(hostingController)
+    view.addSubview(hostingController.view)
+    hostingController.didMove(toParent: self)
+
+    hostingController.view.backgroundColor = .clear
+    hostingController.view.translatesAutoresizingMaskIntoConstraints = false
 
     NSLayoutConstraint.activate([
-      contentView.topAnchor.constraint(equalTo: view.topAnchor),
-      contentView.rightAnchor.constraint(equalTo: view.rightAnchor),
-      contentView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-      contentView.leftAnchor.constraint(equalTo: view.leftAnchor),
+      hostingController.view.topAnchor.constraint(equalTo: view.topAnchor),
+      hostingController.view.rightAnchor.constraint(equalTo: view.rightAnchor),
+      hostingController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+      hostingController.view.leftAnchor.constraint(equalTo: view.leftAnchor),
     ])
 
   }
