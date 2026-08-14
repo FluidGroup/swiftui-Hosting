@@ -24,16 +24,14 @@ open class SwiftUIHostingView<Content: View>: UIView {
 
       self.hostingController = HostingController(
         accessibilityIdentifier: _typeName(Content.self),
-        disableSafeArea: configuration.disableSafeArea,
-        ignoresKeyboard: configuration.ignoresKeyboard,
+        safeAreaRegions: configuration.safeAreaRegions,
         rootView: usingContent
       )
 
     #else
 
       self.hostingController = HostingController(
-        disableSafeArea: configuration.disableSafeArea,
-        ignoresKeyboard: configuration.ignoresKeyboard,
+        safeAreaRegions: configuration.safeAreaRegions,
         rootView: usingContent
       )
 
@@ -227,13 +225,7 @@ public struct SwiftUIHostingConfiguration {
    */
   public var registersAsChildViewController: Bool
   
-  /**
-   Fixes handling safe area issue
-   https://www.notion.so/muukii/UIHostingController-safeArea-issue-ec66a560970c4a1cb44f21cc448bc513?pvs=4
-   */
-  public var disableSafeArea: Bool
-  
-  public var ignoresKeyboard: Bool
+  public var safeAreaRegions: SafeAreaRegions
   
   public var sizeMeasureMode: SwiftUIHostingSizeMeasureMode
   
@@ -241,14 +233,12 @@ public struct SwiftUIHostingConfiguration {
   
   public init(
     registersAsChildViewController: Bool = true,
-    disableSafeArea: Bool = true,
-    ignoresKeyboard: Bool = false,
+    safeAreaRegions: SafeAreaRegions = .keyboard,
     sizeMeasureMode: SwiftUIHostingSizeMeasureMode = .systemSizeThatFits,
     baseModifier: BaseModifier = .shared
   ) {
     self.registersAsChildViewController = registersAsChildViewController
-    self.disableSafeArea = disableSafeArea
-    self.ignoresKeyboard = ignoresKeyboard
+    self.safeAreaRegions = safeAreaRegions
     self.sizeMeasureMode = sizeMeasureMode
     self.baseModifier = baseModifier
   }
