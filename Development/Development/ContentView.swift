@@ -69,7 +69,9 @@ final class KeyboardAvoidanceViewController: UIViewController, UITextFieldDelega
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    let hostingView = SwiftUIHostingView(configuration: .init(ignoresKeyboard: ignoresKeyboard)) { 
+    let hostingView = SwiftUIHostingView(
+      configuration: .init(safeAreaRegions: ignoresKeyboard ? .container : .keyboard)
+    ) {
       Text("Hello")
     }
     

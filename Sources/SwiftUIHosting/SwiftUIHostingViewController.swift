@@ -46,16 +46,14 @@ open class SwiftUIHostingViewController<Content: View>: UIViewController {
 
       let hostingController = HostingController(
         accessibilityIdentifier: _typeName(Content.self),
-        disableSafeArea: configuration.disableSafeArea,
-        ignoresKeyboard: configuration.ignoresKeyboard,
+        safeAreaRegions: configuration.safeAreaRegions,
         rootView: _content
       )
 
     #else
 
       let hostingController = HostingController(
-        disableSafeArea: configuration.disableSafeArea,
-        ignoresKeyboard: configuration.ignoresKeyboard,
+        safeAreaRegions: configuration.safeAreaRegions,
         rootView: _content
       )
 
